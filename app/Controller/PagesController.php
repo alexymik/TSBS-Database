@@ -46,25 +46,30 @@ class PagesController extends AppController {
  *	or MissingViewException in debug mode.
  */
 	public function display() {
-		ini_set('max_execution_time', 300);
+
+		// TODO: Make 'function getLast5Bulletins($make = null, $year = null, $year = null) {}'
 
 		$this->set('title_for_layout', 'TSBS Database');
 
 		$latest_bulletins = array();
-
-		$this->set('bulletins', $latest_bulletins);
 
 		$makes = $this->Vehicle->find('all', array(
 			'order' => array('MAKE ASC'),
 			'group' => array('MAKE')
 		));
 
+		// Get a list of all makes from the DB, this is always displayed
+
 		$makes_formatted = array();
+
 		foreach($makes as $make) {
 			array_push($makes_formatted, $make['Vehicle']['MAKE']);
 		}
 
 		$this->set('makes', $makes_formatted);
+
+		// Filtering goes in order by: MAKE > YEAR > MODEL
+		// Shows the last 5 entries for the furthest filtered item
 
 		if (isset($_POST['data']['Page']['make']) && $_POST['data']['Page']['make']) {
 			
@@ -76,18 +81,20 @@ class PagesController extends AppController {
 					'MAKE' => $makes_formatted[$selected_make]
 				), 
 				'group' => array('YEAR'),
-			 	'order' => array('YEAR DESC')
+			 	'order' => array('YEAR DESC') //Newest first
 			 ));
 
 
 			$years_formatted = array();
+
+			// Get an array of only years for the form
 			foreach($years as $year) {
-				array_push($years_formatted, $year['Vehicle']['YEAR']);
+				array_push($years_formatted, $year['Vehicle']['YEAR']); 
 			}
 
 			$this->set('years', $years_formatted);
 
-			if (isset($_POST['data']['Page']['year']) && $_POST['data']['Page']['year']) {
+			if (isset($_POST['data']['Page']['year']) && is_numeric($_POST['data']['Page']['year'])) {
 
 				$selected_year = $_POST['data']['Page']['year'];
 
@@ -124,9 +131,9 @@ class PagesController extends AppController {
 							'MAKE' => $makes_formatted[$selected_make],
 							'YEAR' => $years_formatted[$selected_year]
 						),
-						'group' => array(
-							'BUL_NO'
-						)
+						// 'group' => array(
+						// 	'BUL_NO'
+						// )
 					));
 
 				} else {
@@ -140,9 +147,9 @@ class PagesController extends AppController {
 							'MAKE' => $makes_formatted[$selected_make],
 							'YEAR' => $years_formatted[$selected_year]
 						),
-						'group' => array(
-							'BUL_NO'
-						)
+						// 'group' => array(
+						// 	'BUL_NO'
+						// )
 					));
 
 				}
@@ -157,14 +164,15 @@ class PagesController extends AppController {
 					'conditions' => array(
 						'MAKE' => $makes_formatted[$selected_make]
 					),
-					'group' => array(
-						'BUL_NO'
-					)
+					// 'group' => array(
+					// 	'BUL_NO'
+					// )
 				));
 			}
 
 		} else {
 
+			// Show the last 5 bulletins added if nothing is selected
 			$latest_bulletins = $this->Bulletin->find('all', array(
 				'limit' => 5,
 				'order' => array('BULLETIN.BUL_DATE DESC')
@@ -173,6 +181,9 @@ class PagesController extends AppController {
 		}
 
 		$this->set('bulletins', $latest_bulletins);
+
 		$this->render('home');
 	}
+
+
 }
