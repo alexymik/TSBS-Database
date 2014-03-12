@@ -9,7 +9,7 @@ Live demo at http://www.alexymik.com/tsbs/
 
 Source: http://www-odi.nhtsa.dot.gov/downloads/
 
-NOTE: SQLite database must be unpacked before use.
+NOTE: SQLite database must be unpacked before use. app/webroot/sqlite_db.zip
 TODO: Add AJAX calls, statistics analysis, automatic DB updating from NHTSA site
 
 CakePHP
