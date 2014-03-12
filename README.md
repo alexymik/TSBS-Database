@@ -9,6 +9,9 @@ Live demo at http://www.alexymik.com/tsbs/
 
 Source: http://www-odi.nhtsa.dot.gov/downloads/
 
+NOTE: SQLite database must be unpacked before use.
+TODO: Add AJAX calls, statistics analysis, automatic DB updating from NHTSA site
+
 CakePHP
 =======
 
